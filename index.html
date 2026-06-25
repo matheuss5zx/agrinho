@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agro Quest</title>
+
+<style>
+body{
+    margin:0;
+    background:#87ceeb;
+    font-family:Arial,sans-serif;
+    text-align:center;
+}
+
+h1{
+    color:white;
+    margin-top:10px;
+}
+
+#game{
+    width:640px;
+    height:640px;
+    margin:20px auto;
+    position:relative;
+    background:#7ec850;
+    border:5px solid #2e7d32;
+    overflow:hidden;
+}
+
+.player{
+    width:40px;
+    height:40px;
+    background:#1565c0;
+    position:absolute;
+    border-radius:8px;
+}
+
+.item{
+    width:30px;
+    height:30px;
+    background:#2e7d32;
+    position:absolute;
+    border-radius:50%;
+}
+
+#score{
+    color:white;
+    font-size:24px;
+}
+</style>
+</head>
+<body>
+
+<h1>🌱 Agro Quest</h1>
+<div id="score">Pontos Sustentáveis: 0</div>
+
+<div id="game">
+    <div id="player" class="player"></div>
+</div>
+
+<script>
+
+const game = document.getElementById("game");
+const player = document.getElementById("player");
+const scoreText = document.getElementById("score");
+
+let x = 100;
+let y = 100;
+let score = 0;
+
+player.style.left = x + "px";
+player.style.top = y + "px";
+
+function criarItem(){
+
+    const item = document.createElement("div");
+
+    item.classList.add("item");
+
+    item.style.left =
+        Math.random() * 600 + "px";
+
+    item.style.top =
+        Math.random() * 600 + "px";
+
+    game.appendChild(item);
+}
+
+for(let i=0;i<10;i++){
+    criarItem();
+}
+
+document.addEventListener("keydown",(e)=>{
+
+    const velocidade = 10;
+
+    if(e.key==="ArrowUp" || e.key==="w"){
+        y -= velocidade;
+    }
+
+    if(e.key==="ArrowDown" || e.key==="s"){
+        y += velocidade;
+    }
+
+    if(e.key==="ArrowLeft" || e.key==="a"){
+        x -= velocidade;
+    }
+
+    if(e.key==="ArrowRight" || e.key==="d"){
+        x += velocidade;
+    }
+
+    x = Math.max(0, Math.min(600,x));
+    y = Math.max(0, Math.min(600,y));
+
+    player.style.left = x + "px";
+    player.style.top = y + "px";
+
+    verificarColisao();
+});
+
+function verificarColisao(){
+
+    const itens =
+        document.querySelectorAll(".item");
+
+    itens.forEach(item=>{
+
+        const itemX =
+            parseInt(item.style.left);
+
+        const itemY =
+            parseInt(item.style.top);
+
+        if(
+            Math.abs(x-itemX) < 30 &&
+            Math.abs(y-itemY) < 30
+        ){
+
+            item.remove();
+
+            score += 10;
+
+            scoreText.innerHTML =
+            "Pontos Sustentáveis: " + score;
+
+            criarItem();
+
+            eventoAleatorio();
+        }
+    });
+}
+
+function eventoAleatorio(){
+
+    const eventos = [
+
+        "🌳 Você plantou uma árvore!",
+        "💧 Economia de água realizada!",
+        "🌱 Solo recuperado!",
+        "♻️ Resíduos reciclados!",
+        "🚜 Agricultura sustentável aplicada!"
+
+    ];
+
+    const sorteado =
+    eventos[Math.floor(
+        Math.random()*eventos.length
+    )];
+
+    setTimeout(()=>{
+        alert(sorteado);
+    },100);
+}
+
+</script>
+
+</body>
+</html>
